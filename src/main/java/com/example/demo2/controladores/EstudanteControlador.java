@@ -11,32 +11,26 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/estudantes")
-public class EstudanteControlador {
-    private final EstudanteRepositorio repositorio;
+public class EstudanteControlador
+{   private final EstudanteRepositorio repositorio;
 
     public EstudanteControlador(EstudanteRepositorio umRepositorio) {
         repositorio = umRepositorio;
     }
 
     @GetMapping
-    public List<Estudante> getEstudantes() {
-        return repositorio.buscarTodos();
-    }
+    public List<Estudante> getEstudantes() { return repositorio.buscarTodos(); }
 
     @GetMapping("/{matricula}")
-    public ResponseEntity<Estudante> getEstudantePorMatricula(@PathVariable String matricula) {
-        Estudante umEstudante = repositorio.buscarPorMatricula(matricula);
+    public ResponseEntity<Estudante> getEstudantePorMatricula(@PathVariable String matricula)
+    {   Estudante umEstudante = repositorio.buscarPorMatricula(matricula);
         if (umEstudante == null)
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(umEstudante);
     }
 
-    @DeleteMapping("/{matricula}")
-    public Estudante remove(@PathVariable String umaMatricula)
-    {  return   repositorio.removerPorMatricula(umaMatricula);
-    }
-
-
+    @DeleteMapping("/{matricula}") // tem que ser igual ao parâmetro
+    public Estudante remover(@PathVariable String matricula) { return repositorio.removerPorMatricula(matricula); }
 
     @GetMapping("/testeCriacao")
     public void criar()
@@ -47,11 +41,14 @@ public class EstudanteControlador {
         repositorio.cadastrar(estudante);
     }
 
-
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void cadastrar (@RequestBody Estudante umEstudante)
     {   repositorio.cadastrar(umEstudante);
+    }
+    @PutMapping("/{matricula}")
+    public void alterar(@PathVariable String matricula,
+                        @RequestBody Estudante estudante)
+    {   repositorio.alterar(estudante);
     }
 }

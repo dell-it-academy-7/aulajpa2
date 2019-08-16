@@ -25,7 +25,7 @@ public class EstudanteRepositorioJPA implements EstudanteRepositorio
     public Estudante removerPorMatricula(String umaMatricula)
     {   Estudante estudante = buscarPorMatricula(umaMatricula);
         em.remove(estudante);
-        return estudante/
+        return estudante;
     }
 
     @Override
