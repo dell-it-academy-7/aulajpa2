@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name= "estudantes")
@@ -14,6 +16,8 @@ public class Estudante
     @Column(nullable = false)
     private String nome;
 
+    @Min(value = 6, message = "Idade minima é  6 anos")
+    @Max(100)
     @Column(nullable = false)
     private int idade;
 

@@ -1,12 +1,14 @@
 package com.example.demo2.controladores;
 
 import com.example.demo2.entidades.Estudante;
+import com.example.demo2.excecoes.EstudanteNaoEncontradoException;
 import com.example.demo2.repositorios.EstudanteRepositorio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -32,23 +34,26 @@ public class EstudanteControlador
     @DeleteMapping("/{matricula}") // tem que ser igual ao parâmetro
     public Estudante remover(@PathVariable String matricula) { return repositorio.removerPorMatricula(matricula); }
 
-    @GetMapping("/testeCriacao")
+    @GetMapping("/Criacao")
     public void criar()
     {   Estudante estudante = new Estudante();
-        estudante.setMatricula("123");
+        estudante.setMatricula(String.valueOf((int)(Math.random() * 1000)));
         estudante.setNome("John Doe");
-        estudante.setIdade(22);
+        estudante.setIdade((int)(Math.random() * 100));
         repositorio.cadastrar(estudante);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void cadastrar (@RequestBody Estudante umEstudante)
-    {   repositorio.cadastrar(umEstudante);
-    }
+    public void cadastrar (@Valid @RequestBody Estudante umEstudante) {   repositorio.cadastrar(umEstudante); }
+
     @PutMapping("/{matricula}")
     public void alterar(@PathVariable String matricula,
-                        @RequestBody Estudante estudante)
-    {   repositorio.alterar(estudante);
+                        @RequestBody Estudante umEstudante)
+    {  Estudante estudante = repositorio.buscarPorMatricula(matricula);
+        if (estudante == null)
+            throw new EstudanteNaoEncontradoException("Matricula = " +matricula + " INVÁLIDA");
+        umEstudante.setMatricula(matricula);
+        repositorio.alterar(umEstudante);
     }
 }

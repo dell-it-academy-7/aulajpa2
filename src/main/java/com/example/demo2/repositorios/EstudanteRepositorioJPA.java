@@ -1,6 +1,7 @@
 package com.example.demo2.repositorios;
 
 import com.example.demo2.entidades.Estudante;
+import com.example.demo2.excecoes.EstudanteNaoEncontradoException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -24,6 +25,8 @@ public class EstudanteRepositorioJPA implements EstudanteRepositorio
     @Override
     public Estudante removerPorMatricula(String umaMatricula)
     {   Estudante estudante = buscarPorMatricula(umaMatricula);
+        if(estudante == null)
+            throw new EstudanteNaoEncontradoException("Matricula = " +umaMatricula + " INVÁLIDA");
         em.remove(estudante);
         return estudante;
     }
@@ -35,5 +38,5 @@ public class EstudanteRepositorioJPA implements EstudanteRepositorio
     public void cadastrar(Estudante umEstudante) { em.persist(umEstudante);}
 
     @Override
-    public void alterar  (Estudante umEstudante) { }
+    public void alterar  (Estudante umEstudante) { em.merge(umEstudante);  }
 }
