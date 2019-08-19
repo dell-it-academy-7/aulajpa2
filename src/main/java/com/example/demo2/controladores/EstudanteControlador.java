@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
+@RestController // desabilita qualquer processamento de view
 @RequestMapping("/estudantes")
 public class EstudanteControlador
 {   private final EstudanteRepositorio repositorio;
